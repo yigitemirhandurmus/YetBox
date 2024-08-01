@@ -23,7 +23,7 @@ class yetbox():
 İsim: {randomSelection[0]}
 Tür: {randomSelection[1]}
 Çıkış Tarihi: {randomSelection[2]}
-Süre: {randomSelection[3]}
+Süre (dk): {randomSelection[3]}
 IMDB Puanı: {randomSelection[4]}
 Dil: {randomSelection[5]}
               """)
@@ -32,7 +32,7 @@ Dil: {randomSelection[5]}
         print("""
 Filmler aşağıdaki şekilde listelenir:
 
-Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre", "IMDB Puanı", "Dil"
+Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı", "Dil"
               """)
         for index, i in enumerate(lines[1:], start=1):
             print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\"")

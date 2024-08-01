@@ -10,6 +10,7 @@ print("""
 YetBox'a Hoşgeldiniz!
 
 1. Bana rastgele bir film öner
+a. Veritabanındaki filmleri listele
       
 Çıkmak için q tuşuna basın.
       """)
@@ -26,10 +27,22 @@ Süre: {randomSelection[3]}
 IMDB Puanı: {randomSelection[4]}
 Dil: {randomSelection[5]}
               """)
+        
+    def listFilms():
+        print("""
+Filmler aşağıdaki şekilde listelenir:
+
+Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre", "IMDB Puanı", "Dil"
+              """)
+        for index, i in enumerate(lines[1:], start=1):
+            print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\"")
+
 
 while True:
     userSelection = input("Seçiminizi yapın: ")
     if userSelection == "1":
         yetbox.randomFilm()
+    elif userSelection.lower() == "a":
+        yetbox.listFilms()
     elif userSelection.lower() == "q":
         break

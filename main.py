@@ -17,6 +17,22 @@ b. Veritabanına film ekle
 Çıkmak için q tuşuna basın.
       """)
 
+def get_int_input(prompt):
+    while True:
+        try:
+            value = int(input(prompt))
+            return value
+        except ValueError:
+            print("Hata: Lütfen geçerli bir tam sayı girin.")
+
+def get_float_input(prompt):
+    while True:
+        try:
+            value = float(input(prompt))
+            return value
+        except ValueError:
+            print("Hata: Lütfen geçerli bir sayı girin.")
+
 class yetbox():
     
     def randomFilm():
@@ -40,19 +56,24 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
             print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\"")
 
     def addFilms():
-        with open("films.csv", "a", encoding="cp1252") as file2:
+        with open("films.csv", "a", newline='', encoding="cp1252") as file:
+            writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
             i = 1
             while True:
-                title = str(input(f"{i}. filmin adını girin (Çıkmak için sadece Enter tuşuna basın): "))
-                if title == "":
-                    break
-                genre = str(input(f"{i}. filmin türünü girin: "))
-                premiere = str(input(f"{i}. filmin çıkış tarihini girin (ör. January 1, 2001 formatında): "))
-                runtime = int(input(f"{i}. filmin süresini (dk) girin: "))
-                puan = float(input(f"{i}. filmin puanını girin: "))
-                language = str(input(f"{i}. filmin dilini girin: "))
-                file2.write(f"{title},{genre},\"{premiere}\",{runtime},{puan},{language}\n") # Turns out using backslash before quotation marks do wonders lol
-                i += 1
+                try:
+                    title = input(f"{i}. filmin adını girin (Çıkmak için sadece Enter tuşuna basın): ")
+                    if title == "":
+                        break
+                    genre = input(f"{i}. filmin türünü girin: ")
+                    premiere = input(f"{i}. filmin çıkış tarihini girin (ör. January 1, 2001 formatında): ")
+                    runtime = get_int_input(f"{i}. filmin süresini (dk) girin: ")
+                    score = get_float_input(f"{i}. filmin puanını girin: ")
+                    language = input(f"{i}. filmin dilini girin: ")
+                    
+                    writer.writerow([title, genre, premiere, runtime, score, language])
+                    i += 1
+                except Exception as e:
+                    print(f"{e}. Lütfen tekrar deneyin.")
 
 while True:
     userSelection = input("Seçiminizi yapın: ")

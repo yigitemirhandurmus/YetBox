@@ -2,7 +2,7 @@ import os
 import csv
 import random
 
-with open("films.csv", "r", encoding="cp1252") as file:
+with open("films.csv", "r", encoding="utf-8") as file:
     reader = csv.reader(file, delimiter=',')
     lines = list(reader)
 
@@ -57,7 +57,7 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
             print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\"")
 
     def addFilms():
-        with open("films.csv", "a", newline='', encoding="cp1252") as file:
+        with open("films.csv", "a", newline='', encoding="utf-8") as file:
             writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_MINIMAL)
             i = 1
             while True:
@@ -77,7 +77,7 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
                     print(f"{e}. Lütfen tekrar deneyin.")
 
     def delFilms():
-        with open('films.csv', "r", newline='', encoding="cp1252") as csvfile:
+        with open('films.csv', "r", newline='', encoding="utf-8") as csvfile:
             reader = csv.reader(csvfile)
             delLines = list(reader)[1:]
 
@@ -89,7 +89,7 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
             if 1 <= to_delete <= total_films:
                 delete_index = to_delete - 1
                 del delLines[delete_index]
-                with open('films.csv', 'w', newline='', encoding="cp1252") as csvfile:
+                with open('films.csv', 'w', newline='', encoding="utf-8") as csvfile:
                     csvfile.write("Title,Genre,Premiere,Runtime,IMDB Score,Language\n")
                     writer = csv.writer(csvfile)
                     writer.writerows(delLines)

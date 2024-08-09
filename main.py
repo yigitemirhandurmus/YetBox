@@ -13,6 +13,7 @@ YetBox'a Hoşgeldiniz!
 
 a. Veritabanındaki filmleri listele
 b. Veritabanına film ekle
+c. Veritabanından film sil
       
 Çıkmak için q tuşuna basın.
       """)
@@ -75,6 +76,30 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
                 except Exception as e:
                     print(f"{e}. Lütfen tekrar deneyin.")
 
+    def delFilms():
+        with open('films.csv', "r", newline='', encoding="cp1252") as csvfile:
+            reader = csv.reader(csvfile)
+            delLines = list(reader)[1:]
+
+        total_films = len(delLines)
+        print(f"Toplam {total_films} film var.")
+
+        try:
+            to_delete = int(input("Silmek istediğiniz filmin numarasını girin: "))
+            if 1 <= to_delete <= total_films:
+                delete_index = to_delete - 1
+                del delLines[delete_index]
+                with open('films.csv', 'w', newline='', encoding="cp1252") as csvfile:
+                    csvfile.write("Title,Genre,Premiere,Runtime,IMDB Score,Language\n")
+                    writer = csv.writer(csvfile)
+                    writer.writerows(delLines)
+                    print(f"{to_delete}. film başarıyla silindi.")
+            else:    
+                print(f"Lütfen 1 ile {total_films} arasında bir sayı girin.")
+        except ValueError:
+            print("Lütfen geçerli bir sayı girin.")
+
+
 while True:
     userSelection = input("Seçiminizi yapın: ")
     if userSelection == "1":
@@ -83,5 +108,8 @@ while True:
         yetbox.listFilms()
     elif userSelection.lower() == "b":
         yetbox.addFilms()
+    elif userSelection.lower() == "c":
+        yetbox.delFilms()
     elif userSelection.lower() == "q":
         break
+

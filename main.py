@@ -2,21 +2,67 @@ import os
 import csv
 import random
 
-with open("films.csv", "r", encoding="utf-8") as file:
-    reader = csv.reader(file, delimiter=',')
-    lines = list(reader)
+if not os.path.exists("users.csv"):
+    with open("users.csv", "w", encoding="utf-8") as loginFile:
+        pass
 
-print("""
-YetBox'a Hoşgeldiniz!
+userLoggedIn = False
+class userManagement():
+    def sign_up():
+        global user_name
+        global user_surname
+        global user_email
+        global user_password
+        global user_password_again
+        global nickname
+        user_name = input("İsim: ")
+        user_surname = input("Soyisim: ")
+        user_email = input("E-mail: ")
+        nickname = input("Kullanıcı adı: ")
+        user_password = input("Şifre: ")
+        user_password_again = input("Şifrenizi tekrar girin: ")
+        if user_password_again == user_password:
+            with open("users.csv", "a", encoding="utf-8") as loginFile:
+                writer = csv.writer(loginFile, delimiter=',', quoting=csv.QUOTE_MINIMAL)
+                writer.writerow([nickname, user_name, user_surname, user_email, user_password])
+            print("Hesabınız oluşturuldu.")
+        else:
+            print("Şifreleriniz uyumsuz! Tekrar deneyin.")
 
-1. Bana rastgele bir film öner
+    def login():
+        global userLoggedIn
+        control_nickname = input("Kullanıcı adınızı girin: ")
+        control_password = input("Şifrenizi girin: ")
+        with open("users.csv", "r", encoding="utf-8") as loginFile:
+            reader = csv.reader(loginFile)
+            credentials = list(reader)
 
-a. Veritabanındaki filmleri listele
-b. Veritabanına film ekle
-c. Veritabanından film sil
-      
-Çıkmak için q tuşuna basın.
-      """)
+            for i in credentials:
+                if control_nickname == i[0] and control_password == i[4]:
+                    user = str(i[0])
+                    print(f"Başarıyla giriş yaptınız! Kullanıcı adınız: {i[0]}")
+                    userLoggedIn = True
+            if userLoggedIn == False:
+                print("Kullanıcı bulunamadı!")
+
+print("""Hoşgeldiniz.
+Yapmak istediğiniz eylemi seçin:
+      1. Yeni kullanıcı oluşturma
+      2. Kullanıcı girişi
+
+      q. Çıkış      
+""")
+if userLoggedIn == False:
+    while True:
+        loginSelection = input("Seçiminizi yapın: ")
+        if loginSelection == "1":
+            userManagement.sign_up()
+            break
+        if loginSelection == "2":
+            userManagement.login()
+            break
+        if loginSelection == "q":
+            break
 
 def get_int_input(prompt):
     while True:
@@ -100,16 +146,35 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
             print("Lütfen geçerli bir sayı girin.")
 
 
-while True:
-    userSelection = input("Seçiminizi yapın: ")
-    if userSelection == "1":
-        yetbox.randomFilm()
-    elif userSelection.lower() == "a":
-        yetbox.listFilms()
-    elif userSelection.lower() == "b":
-        yetbox.addFilms()
-    elif userSelection.lower() == "c":
-        yetbox.delFilms()
-    elif userSelection.lower() == "q":
-        break
+if userLoggedIn == True:
+    with open("films.csv", "r", encoding="utf-8") as file:
+        reader = csv.reader(file, delimiter=',')
+        lines = list(reader)
+
+    print("""
+    YetBox'a Hoşgeldiniz!
+
+    1. Bana rastgele bir film öner
+
+    a. Veritabanındaki filmleri listele
+    b. Veritabanına film ekle
+    c. Veritabanından film sil
+        
+    Çıkmak için q tuşuna basın.
+        """)
+
+    while True:
+        userSelection = input("Seçiminizi yapın: ")
+        if userSelection == "1":
+            yetbox.randomFilm()
+        elif userSelection.lower() == "a":
+            yetbox.listFilms()
+        elif userSelection.lower() == "b":
+            yetbox.addFilms()
+        elif userSelection.lower() == "c":
+            yetbox.delFilms()
+        elif userSelection.lower() == "q":
+            break
+else:
+    print("Henüz giriş yapmadınız! Giriş yapabilmek ve seçenekleri görebilmek için programı tekrar çalıştırın.")
 

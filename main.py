@@ -45,23 +45,34 @@ class userManagement():
             if userLoggedIn == False:
                 print("Kullanıcı bulunamadı!")
 
+    def assignIDs():
+        filename = 'assign_id.py'
+        with open(filename) as script:
+            exec(script.read())
+
 print("""Hoşgeldiniz.
 Yapmak istediğiniz eylemi seçin:
       1. Yeni kullanıcı oluşturma
       2. Kullanıcı girişi
+
+      i. Film veritabanındaki her filme bir ID ata (sadece debugging için kullanın!)
 
       q. Çıkış      
 """)
 if userLoggedIn == False:
     while True:
         loginSelection = input("Seçiminizi yapın: ")
-        if loginSelection == "1":
+        if loginSelection.lower() == "1":
             userManagement.sign_up()
             break
-        if loginSelection == "2":
+        if loginSelection.lower() == "2":
             userManagement.login()
             break
-        if loginSelection == "q":
+        if loginSelection.lower() == "i":
+            userManagement.assignIDs()
+            print("İşlem gerçekleştirildi.")
+            break
+        if loginSelection.lower() == "q":
             break
 
 def get_int_input(prompt):

@@ -1,6 +1,8 @@
 import os
 import csv
 import random
+import json
+from datetime import datetime
 
 if not os.path.exists("users.csv"):
     with open("users.csv", "w", encoding="utf-8") as loginFile:
@@ -30,6 +32,7 @@ class userManagement():
             print("Şifreleriniz uyumsuz! Tekrar deneyin.")
 
     def login():
+        global user
         global userLoggedIn
         control_nickname = input("Kullanıcı adınızı girin: ")
         control_password = input("Şifrenizi girin: ")
@@ -65,14 +68,14 @@ if userLoggedIn == False:
         if loginSelection.lower() == "1":
             userManagement.sign_up()
             break
-        if loginSelection.lower() == "2":
+        elif loginSelection.lower() == "2":
             userManagement.login()
             break
-        if loginSelection.lower() == "i":
+        elif loginSelection.lower() == "i":
             userManagement.assignIDs()
             print("İşlem gerçekleştirildi.")
             break
-        if loginSelection.lower() == "q":
+        elif loginSelection.lower() == "q":
             break
 
 def get_int_input(prompt):
@@ -156,6 +159,62 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
         except ValueError:
             print("Lütfen geçerli bir sayı girin.")
 
+    class Comments():
+        global load_films
+        global load_comments
+        global save_comment
+        global add_comment
+
+        def load_films():
+            films = {}
+            with open("films.csv", 'r', encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    films[row['Title']] = row['ID']
+            return films
+
+        def load_comments():
+            try:
+                with open("comments.json", 'r') as file:
+                    return json.load(file)
+            except FileNotFoundError:
+                return {}
+
+        def save_comment(comments):
+            with open("comments.json", 'w') as file:
+                json.dump(comments, file, indent=2)
+
+        def add_comment(films, comments):
+            film_title = input("Yorum eklemek istediğiniz filmin adını girin: ")
+            if film_title not in films:
+                print("Film bulunamadı.")
+                return
+
+            film_id = films[film_title]
+            username = user
+            comment_text = input("Yorumunuzu girin: ")
+            timestamp = datetime.now().isoformat()
+
+            if film_id not in comments:
+                comments[film_id] = []
+
+            comments[film_id].append({
+                "username": username,
+                "comment": comment_text,
+                "timestamp": timestamp
+            })
+
+            save_comment(comments)
+            print("Yorum başarıyla eklendi!")
+
+        def main():
+            films = load_films()
+            comments = load_comments()
+
+            while True:
+                add_comment(films, comments)
+                if input("Başka bir film eklemek ister misiniz? (Evet için e tuşuna basın, hayır için diğer herhangi bir tuşa basın): ").lower() != 'e':
+                    break
 
 if userLoggedIn == True:
     with open("films.csv", "r", encoding="utf-8") as file:
@@ -166,6 +225,7 @@ if userLoggedIn == True:
     YetBox'a Hoşgeldiniz!
 
     1. Bana rastgele bir film öner
+    2. Seçtiğim bir filme yorum yap
 
     a. Veritabanındaki filmleri listele
     b. Veritabanına film ekle
@@ -178,6 +238,8 @@ if userLoggedIn == True:
         userSelection = input("Seçiminizi yapın: ")
         if userSelection == "1":
             yetbox.randomFilm()
+        elif userSelection.lower() == "2":
+            yetbox.Comments.main()
         elif userSelection.lower() == "a":
             yetbox.listFilms()
         elif userSelection.lower() == "b":

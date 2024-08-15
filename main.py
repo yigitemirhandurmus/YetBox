@@ -111,10 +111,10 @@ Dil: {randomSelection[5]}
         print("""
 Filmler aşağıdaki şekilde listelenir:
 
-Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı", "Dil"
+Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı", "Dil", "ID"
               """)
         for index, i in enumerate(lines[1:], start=1):
-            print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\"")
+            print(f"{index}: \"{i[0]}\", \"{i[1]}\", \"{i[2]}\", \"{i[3]}\", \"{i[4]}\", \"{i[5]}\", \"{i[6]}\"")
 
     def addFilms():
         with open("films.csv", "a", newline='', encoding="utf-8") as file:

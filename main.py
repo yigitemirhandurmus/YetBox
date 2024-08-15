@@ -235,18 +235,18 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
                 return {}
 
         def list_comments(films, comments):
-            film_title = input("Enter the film title: ")
+            film_title = input("Film başlığını girin: ")
             if film_title not in films:
-                print("Film not found.")
+                print("Film bulunamadı.")
                 return
 
             film_id = films[film_title]
 
             if film_id not in comments or not comments[film_id]:
-                print("No comments available for this film.")
+                print("Bu film için kimse yorum yapmamış.")
                 return
 
-            print(f"Comments for {film_title}:")
+            print(f"{film_title} için yorumlar:")
             for i, comment in enumerate(comments[film_id], 1):
                 formatted_time = datetime.fromisoformat(comment['timestamp']).strftime('%d/%m/%Y %H:%M:%S')
                 print(f"{i}. {comment['username']} ({formatted_time}): {comment['comment']}")

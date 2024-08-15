@@ -216,6 +216,46 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
                 if input("Başka bir film eklemek ister misiniz? (Evet için e tuşuna basın, hayır için diğer herhangi bir tuşa basın): ").lower() != 'e':
                     break
 
+    class listComments():
+        global list_comments
+
+        def load_films():
+            films = {}
+            with open("films.csv", 'r', encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    films[row['Title']] = row['ID']
+            return films
+
+        def load_comments():
+            try:
+                with open("comments.json", 'r') as file:
+                    return json.load(file)
+            except FileNotFoundError:
+                return {}
+
+        def list_comments(films, comments):
+            film_title = input("Enter the film title: ")
+            if film_title not in films:
+                print("Film not found.")
+                return
+
+            film_id = films[film_title]
+
+            if film_id not in comments or not comments[film_id]:
+                print("No comments available for this film.")
+                return
+
+            print(f"Comments for {film_title}:")
+            for i, comment in enumerate(comments[film_id], 1):
+                formatted_time = datetime.fromisoformat(comment['timestamp']).strftime('%d/%m/%Y %H:%M:%S')
+                print(f"{i}. {comment['username']} ({formatted_time}): {comment['comment']}")
+
+        def main():
+            films = load_films()
+            comments = load_comments()
+            list_comments(films, comments)
+
 if userLoggedIn == True:
     with open("films.csv", "r", encoding="utf-8") as file:
         reader = csv.reader(file, delimiter=',')
@@ -226,6 +266,7 @@ if userLoggedIn == True:
 
     1. Bana rastgele bir film öner
     2. Seçtiğim bir filme yorum yap
+    3. Seçtiğim bir filme dair yorumları listele
 
     a. Veritabanındaki filmleri listele
     b. Veritabanına film ekle
@@ -240,6 +281,8 @@ if userLoggedIn == True:
             yetbox.randomFilm()
         elif userSelection.lower() == "2":
             yetbox.Comments.main()
+        elif userSelection.lower() == "3":
+            yetbox.listComments.main()
         elif userSelection.lower() == "a":
             yetbox.listFilms()
         elif userSelection.lower() == "b":
@@ -250,4 +293,3 @@ if userLoggedIn == True:
             break
 else:
     print("Henüz giriş yapmadınız! Giriş yapabilmek ve seçenekleri görebilmek için programı tekrar çalıştırın.")
-

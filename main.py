@@ -46,7 +46,7 @@ class userManagement():
                     print(f"Başarıyla giriş yaptınız! Kullanıcı adınız: {i[0]}")
                     userLoggedIn = True
             if userLoggedIn == False:
-                print("Kullanıcı bulunamadı!")
+                print("Kullanıcı adı ya da şifre yanlış!")
 
     def assignIDs():
         filename = 'assign_id.py'

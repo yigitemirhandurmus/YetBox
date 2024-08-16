@@ -256,6 +256,96 @@ Film numarası: "İsim", "Tür", "Çıkış Tarihi", "Süre (dk)", "IMDB Puanı"
             comments = load_comments()
             list_comments(films, comments)
 
+    class Ratings():
+        global save_ratings
+        global add_rating
+        global display_ratings
+        global load_ratings
+
+        def load_films():
+            films = {}
+            with open("films.csv", 'r', encoding="utf-8") as file:
+                reader = csv.DictReader(file)
+                for row in reader:
+                    films[row['Title']] = row['ID']
+            return films
+
+        def load_ratings():
+            try:
+                with open("ratings.json", 'r') as file:
+                    return json.load(file)
+            except FileNotFoundError:
+                return {}
+
+        def save_ratings(ratings):
+            with open("ratings.json", 'w') as file:
+                json.dump(ratings, file, indent=2)
+
+        def add_rating(films, ratings):
+            film_title = input("Değerlendirmek istediğiniz filmin başlığını girin: ")
+            if film_title not in films:
+                print("Film bulunamadı.")
+                return
+
+            film_id = films[film_title]
+            username = user
+            
+            while True:
+                rating = input("Like için 'l', dislike için 'd' tuşuna basın: ").lower()
+                if rating in ['l', 'd']:
+                    break
+                print("Lütfen geçerli bir harf kullanın.")
+
+            if film_id not in ratings:
+                ratings[film_id] = {"likes": 0, "dislikes": 0, "users": {}}
+
+            if username in ratings[film_id]["users"]:
+                prev_rating = ratings[film_id]["users"][username]
+                ratings[film_id][prev_rating + "s"] -= 1
+
+            new_rating = "like" if rating == 'l' else "dislike"
+            ratings[film_id][new_rating + "s"] += 1
+            ratings[film_id]["users"][username] = new_rating
+
+            save_ratings(ratings)
+            print("Değerlendirme başarıyla eklendi!")
+
+        def display_ratings(films, ratings):
+            film_title = input("Değerlendirmeleri görmek için bir film başlığı girin: ")
+            if film_title not in films:
+                print("Film bulunamadı.")
+                return
+
+            film_id = films[film_title]
+            if film_id not in ratings:
+                print("Bu film için henüz değerlendirme yok.")
+            else:
+                likes = ratings[film_id]["likes"]
+                dislikes = ratings[film_id]["dislikes"]
+                print(f"'{film_title}' için değerlendirmeler:")
+                print(f"Like'lar: {likes}")
+                print(f"Dislike'lar: {dislikes}")
+
+        def main():
+            films = load_films()
+            ratings = load_ratings()
+
+            while True:
+                action = input("""
+    1. Bir filmi değerlendirin
+    2. Bir film için değerlendirmeleri görüntüleyin
+    q. Film değerlendirme sekmesinden çıkın
+                               
+Seçiminizi yapın: """).lower()
+                if action == '1':
+                    add_rating(films, ratings)
+                elif action == '2':
+                    display_ratings(films, ratings)
+                elif action == 'q':
+                    break
+                else:
+                    print("Geçersiz seçim, lütfen tekrar deneyin.")
+
 if userLoggedIn == True:
     with open("films.csv", "r", encoding="utf-8") as file:
         reader = csv.reader(file, delimiter=',')
@@ -267,6 +357,7 @@ if userLoggedIn == True:
     1. Bana rastgele bir film öner
     2. Seçtiğim bir filme yorum yap
     3. Seçtiğim bir filme dair yorumları listele
+    4. Seçtiğim bir filmi değerlendir veya değerlendirmeleri görüntüle
 
     a. Veritabanındaki filmleri listele
     b. Veritabanına film ekle
@@ -283,6 +374,8 @@ if userLoggedIn == True:
             yetbox.Comments.main()
         elif userSelection.lower() == "3":
             yetbox.listComments.main()
+        elif userSelection.lower() == "4":
+            yetbox.Ratings.main()
         elif userSelection.lower() == "a":
             yetbox.listFilms()
         elif userSelection.lower() == "b":

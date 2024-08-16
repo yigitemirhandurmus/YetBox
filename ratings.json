@@ -1,0 +1,10 @@
+{
+  "1": {
+    "likes": 0,
+    "dislikes": 2,
+    "users": {
+      "2222": "dislike",
+      "1111": "dislike"
+    }
+  }
+}

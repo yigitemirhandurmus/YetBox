@@ -384,5 +384,8 @@ if userLoggedIn == True:
             yetbox.delFilms()
         elif userSelection.lower() == "q":
             break
+        else:
+            print("Geçersiz seçim, lütfen tekrar deneyin.")
+            
 else:
     print("Henüz giriş yapmadınız! Giriş yapabilmek ve seçenekleri görebilmek için programı tekrar çalıştırın.")

@@ -351,7 +351,8 @@ if userLoggedIn == True:
         reader = csv.reader(file, delimiter=',')
         lines = list(reader)
 
-    print("""
+    while True:
+        userSelection = input("""
     YetBox'a Hoşgeldiniz!
 
     1. Bana rastgele bir film öner
@@ -364,10 +365,8 @@ if userLoggedIn == True:
     c. Veritabanından film sil
         
     Çıkmak için q tuşuna basın.
-        """)
 
-    while True:
-        userSelection = input("Seçiminizi yapın: ")
+Seçiminizi yapın: """)
         if userSelection == "1":
             yetbox.randomFilm()
         elif userSelection.lower() == "2":
